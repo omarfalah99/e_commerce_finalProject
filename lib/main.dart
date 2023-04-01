@@ -1,4 +1,3 @@
-import 'package:e_commerce/model/firebase_auth.dart';
 import 'package:e_commerce/screen/main_screen.dart';
 import 'package:e_commerce/screen/onboard_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'model/firebase_auth.dart';
+import 'model/firestore_auth.dart';
 import 'model/product_provider.dart';
 
 Future main() async {
@@ -16,7 +17,8 @@ Future main() async {
       ChangeNotifierProvider<ProductProvider>(
           create: (context) => ProductProvider()),
       ChangeNotifierProvider<FirebaseAuthMethods>(
-          create: (context) => FirebaseAuthMethods())
+          create: (context) => FirebaseAuthMethods()),
+      ChangeNotifierProvider(create: (context) => FirestoreData())
     ],
     child: App(),
   ));

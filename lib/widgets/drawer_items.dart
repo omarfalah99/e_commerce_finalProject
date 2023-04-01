@@ -1,6 +1,7 @@
-import 'package:e_commerce/screen/favorite_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../screen/favorite_screen.dart';
 
 class DrawerItems extends StatelessWidget {
   String title;
@@ -11,8 +12,14 @@ class DrawerItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+        primary: const Color.fromRGBO(246, 121, 82, 1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        backgroundColor: Color(0xFFF5F6F9),
+      ),
+      onPressed: () {
         if (title == 'Log out') {
           FirebaseAuth.instance.signOut();
         } else if (title == 'My favorites') {
@@ -21,22 +28,17 @@ class DrawerItems extends StatelessWidget {
           }));
         }
       },
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: ListTile(
+          title: Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+            ),
           ),
-        ),
-        leading: Container(
-          width: 27,
-          height: 24,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            color: Color.fromRGBO(246, 121, 82, 0.1),
-          ),
-          child: Icon(
+          leading: Icon(
             iconData,
             color: Color.fromRGBO(246, 121, 82, 1),
           ),

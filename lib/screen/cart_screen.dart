@@ -14,6 +14,8 @@ class _CartScreenState extends State<CartScreen> {
       .collection('carts')
       .snapshots();
 
+  bool isItems = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,9 +39,9 @@ class _CartScreenState extends State<CartScreen> {
                     } else {
                       final cart = snapshot.data?.docs[index];
                       return Container(
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         height: 70,
-                        color: Color.fromRGBO(254, 252, 243, 1),
+                        color: const Color.fromRGBO(254, 252, 243, 1),
                         child: ListTile(
                           title: Text(cart!['name']),
                           leading: Image.network(cart['imageUrl']),
@@ -58,13 +60,13 @@ class _CartScreenState extends State<CartScreen> {
                   padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(246, 121, 82, 1),
+                      backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       minimumSize: Size(double.infinity, 20),
                     ),
-                    child: const Text('Checkout'),
+                    child: const Text('Go To Checkout'),
                     onPressed: () async {
                       final data = await FirebaseFirestore.instance
                           .collection('user_cart')

@@ -18,6 +18,15 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController name = TextEditingController();
 
   Future<void> registerOrSignin() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Color.fromRGBO(246, 121, 82, 1),
+            ),
+          );
+        });
     if (signOrLog) {
       try {
         final result = await FirebaseAuth.instance
@@ -88,6 +97,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Full screen width and height
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -272,21 +285,17 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 45,
               ),
-              GestureDetector(
-                onTap: registerOrSignin,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(246, 121, 82, 1),
-                    borderRadius: BorderRadius.circular(133),
-                  ),
-                  width: 205,
-                  height: 59,
-                  child: Center(
-                    child: Text(
-                      !signOrLog ? 'Log in' : 'Sign up',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
+                    minimumSize: const Size(205, 59),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(133),
+                    )),
+                onPressed: registerOrSignin,
+                child: Text(
+                  !signOrLog ? 'Log in' : 'Sign up',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
               SizedBox(

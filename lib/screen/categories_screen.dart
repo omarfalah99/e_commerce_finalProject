@@ -23,41 +23,41 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   itemCount: snapshot.data?.docs.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisExtent: 265,
+                    mainAxisExtent: 275,
                   ),
                   itemBuilder: (context, index) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      const Center(
-                        child: CircularProgressIndicator(
-                          color: Color.fromRGBO(246, 121, 82, 1),
-                          strokeWidth: 3,
-                        ),
+                      Center(
+                        child: CircularProgressIndicator(),
                       );
                     } else {
                       final products = snapshot.data?.docs[index];
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (c) {
-                                return DescriptionScreen(
-                                  image: products['imageUrl'],
-                                  tag: index.toString(),
-                                  des: products['des'],
-                                  name: products['name'],
-                                  price: products['price'],
-                                );
-                              },
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            primary: const Color.fromRGBO(246, 121, 82, 1),
+                            padding: const EdgeInsets.all(20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                          );
-                        },
-                        child: Container(
-                          width: width / 2,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Color.fromRGBO(254, 252, 243, 1),
+                            backgroundColor: const Color(0xFFF5F6F9),
                           ),
-                          margin: const EdgeInsets.all(8),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (c) {
+                                  return DescriptionScreen(
+                                    image: products['imageUrl'],
+                                    tag: index.toString(),
+                                    des: products['des'],
+                                    name: products['name'],
+                                    price: products['price'],
+                                  );
+                                },
+                              ),
+                            );
+                          },
                           child: Column(
                             children: [
                               Hero(
@@ -67,11 +67,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Text(products['name']),
-                                ],
-                              ),
+                              Text(products['name']),
                             ],
                           ),
                         ),
