@@ -30,6 +30,14 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Color.fromRGBO(246, 121, 82, 0.1),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide.none,
+          ),
+        ),
         fontFamily: 'Gordita',
         appBarTheme: AppBarTheme(
           elevation: 0,

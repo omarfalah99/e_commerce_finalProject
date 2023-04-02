@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_onboard/flutter_onboard.dart';
 
-import 'login_screen.dart';
+import 'welcome_screen.dart';
 
 class OnboardScreen extends StatelessWidget {
   final PageController _pageController = PageController();

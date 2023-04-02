@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_commerce/widgets/information_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/information_card.dart';
 
 class PersonalScreen extends StatelessWidget {
   const PersonalScreen({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class PersonalScreen extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else {
@@ -27,23 +28,23 @@ class PersonalScreen extends StatelessWidget {
                     SizedBox(
                       height: height * 0.05,
                     ),
-                    CircleAvatar(
-                      backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
-                      radius: 50,
-                      // Set background color of avatar
-                      child: Center(
-                        child: Text(
-                          snapshot.data?.docs[0]['name'][0],
-                          // Replace 'A' with the letter you want to display
-                          style: TextStyle(
-                            color: Colors.white, // Set text color
-                            fontSize: 50, // Set font size
-                          ),
-                        ),
-                      ),
-                    ),
+                    // CircleAvatar(
+                    //   backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
+                    //   radius: 50,
+                    //   // Set background color of avatar
+                    //   child: Center(
+                    //     child: Text(
+                    //       snapshot.data?.docs[0]['name'][0],
+                    //       // Replace 'A' with the letter you want to display
+                    //       style: TextStyle(
+                    //         color: Colors.white, // Set text color
+                    //         fontSize: 50, // Set font size
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(
-                      height: height * 0.07,
+                      height: height * 0.05,
                     ),
                     InfoCard(
                       iconData: Icons.person,
@@ -56,6 +57,10 @@ class PersonalScreen extends StatelessWidget {
                     InfoCard(
                       iconData: Icons.password,
                       value: snapshot.data?.docs[0]['password'],
+                    ),
+                    InfoCard(
+                      iconData: Icons.phone,
+                      value: snapshot.data?.docs[0]['phone'],
                     ),
                     InfoCard(
                       iconData: Icons.logout,

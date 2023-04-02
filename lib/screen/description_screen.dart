@@ -42,17 +42,19 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromRGBO(246, 121, 82, 1),
         elevation: 0,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
-            color: Color.fromRGBO(246, 121, 82, 1),
+            color: Colors.white,
           ),
         ),
       ),
@@ -77,7 +79,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: Align(
                         alignment: Alignment.topRight,
                         child: IconButton(
@@ -86,7 +88,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                               : showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return AlertDialog(
+                                    return const AlertDialog(
                                       title: Text('Already added to fav'),
                                     );
                                   }),
@@ -104,7 +106,10 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                     )
                   ],
                 ),
-                Text(widget.des),
+                Text(
+                  widget.des,
+                  style: TextStyle(fontSize: 15),
+                ),
                 SizedBox(
                   height: 50,
                 ),
@@ -141,7 +146,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             quantity++;
                           });
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_forward_ios,
                           color: Color.fromRGBO(246, 121, 82, 1),
                         )),
@@ -150,7 +155,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 Center(
                   child: Text(
                     '${widget.price * quantity} \$',
-                    style: TextStyle(color: Color.fromRGBO(246, 121, 82, 1)),
+                    style:
+                        const TextStyle(color: Color.fromRGBO(246, 121, 82, 1)),
                   ),
                 ),
                 Padding(
