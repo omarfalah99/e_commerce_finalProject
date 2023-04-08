@@ -32,16 +32,16 @@ class App extends StatelessWidget {
       theme: ThemeData(
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: Color.fromRGBO(246, 121, 82, 0.1),
+          fillColor: const Color.fromRGBO(246, 121, 82, 0.1),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide.none,
           ),
         ),
         fontFamily: 'Gordita',
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           elevation: 0,
-          backgroundColor: Color(0x44000000),
+          backgroundColor: Color.fromRGBO(246, 121, 82, 1),
         ),
         iconTheme: IconThemeData(
           color: Color.fromRGBO(246, 121, 82, 1),
@@ -51,7 +51,7 @@ class App extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.connectionState == ConnectionState.active) {

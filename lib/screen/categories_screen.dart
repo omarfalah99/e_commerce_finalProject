@@ -10,8 +10,6 @@ class CategoriesScreen extends StatefulWidget {
 class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('products').snapshots(),

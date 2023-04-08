@@ -74,27 +74,41 @@ class _CartScreenState extends State<CartScreen> {
                           .collection('carts')
                           .get();
 
-                      data.docs.forEach((element) {
-                        FirebaseFirestore.instance
-                            .collection('admin_cart')
-                            .doc(FirebaseAuth.instance.currentUser!.email)
-                            .collection('email_cart')
-                            .add({
-                          'name': element['name'],
-                          'imageUrl': element['imageUrl'],
-                          'email': FirebaseAuth.instance.currentUser!.email,
-                          'price': element['price'],
-                          'quantity': element['quantity'],
-                          'subtotal':
-                              '${element['price'] * element['quantity']}'
-                        });
-                        FirebaseFirestore.instance
-                            .collection('user_cart')
-                            .doc(FirebaseAuth.instance.currentUser!.email)
-                            .collection('carts')
-                            .doc(element.id)
-                            .delete();
+                      String userName = '';
+                      String phone = '';
+
+                      final data2 = await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser?.uid)
+                          .get()
+                          .then((value) {
+                        userName = value['name'];
+                        phone = value['phone'];
                       });
+
+                      data.docs.forEach(
+                        (element) {
+                          FirebaseFirestore.instance
+                              .collection('admin_cart')
+                              .add({
+                            'name': element['name'],
+                            'imageUrl': element['imageUrl'],
+                            'email': FirebaseAuth.instance.currentUser!.email,
+                            'price': element['price'],
+                            'quantity': element['quantity'],
+                            'subtotal':
+                                '${element['price'] * element['quantity']}',
+                            'nameOfUser': userName,
+                            'phone': phone
+                          });
+                          FirebaseFirestore.instance
+                              .collection('user_cart')
+                              .doc(FirebaseAuth.instance.currentUser!.email)
+                              .collection('carts')
+                              .doc(element.id)
+                              .delete();
+                        },
+                      );
                     },
                   ),
                 ),

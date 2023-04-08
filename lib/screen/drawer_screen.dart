@@ -35,7 +35,6 @@ class DrawerScreen extends StatelessWidget {
                   }
                 }),
             DrawerItems(title: 'My favorites', iconData: Icons.favorite),
-            DrawerItems(iconData: Icons.wallet_outlined, title: 'Wallets'),
             DrawerItems(
                 title: 'My orders', iconData: Icons.shopping_bag_rounded),
             DrawerItems(title: 'About us', iconData: Icons.info_rounded),

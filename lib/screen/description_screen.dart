@@ -42,8 +42,6 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(246, 121, 82, 1),
@@ -71,7 +69,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 Stack(
                   children: [
                     Hero(
-                      tag: 'wow' + widget.tag,
+                      tag: 'wow${widget.tag}',
                       child: Image.network(
                         widget.image,
                         height: 300,
@@ -93,11 +91,11 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                     );
                                   }),
                           icon: snapshot.data?.docs.length == 0
-                              ? Icon(
+                              ? const Icon(
                                   Icons.favorite_outline,
                                   color: Color.fromRGBO(246, 121, 82, 1),
                                 )
-                              : Icon(
+                              : const Icon(
                                   Icons.favorite,
                                   color: Color.fromRGBO(246, 121, 82, 1),
                                 ),
@@ -108,9 +106,9 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 ),
                 Text(
                   widget.des,
-                  style: TextStyle(fontSize: 15),
+                  style: const TextStyle(fontSize: 15),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
                 Row(
@@ -124,20 +122,20 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             });
                           }
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_back_ios,
                           color: Color.fromRGBO(246, 121, 82, 1),
                         )),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
-                      '${quantity}',
-                      style: TextStyle(
+                      '$quantity',
+                      style: const TextStyle(
                         color: Color.fromRGBO(246, 121, 82, 1),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     IconButton(
@@ -164,11 +162,11 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(246, 121, 82, 1),
+                        backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        minimumSize: Size(double.infinity, 50)),
+                        minimumSize: const Size(double.infinity, 50)),
                     onPressed: () async {
                       await FirebaseFirestore.instance
                           .collection('user_cart')
@@ -188,7 +186,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             );
                           });
                     },
-                    child: Text('Add to cart'),
+                    child: const Text('Add to cart'),
                   ),
                 ),
               ],

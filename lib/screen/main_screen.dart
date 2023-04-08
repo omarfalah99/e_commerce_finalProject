@@ -1,3 +1,4 @@
+import 'package:e_commerce/screen/favorite_screen.dart';
 import 'package:e_commerce/screen/personal_information_screen.dart';
 import 'package:e_commerce/screen/search_screen.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,6 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'cart_screen.dart';
-import 'categories_screen.dart';
-import 'drawer_screen.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key? key}) : super(key: key);
@@ -21,9 +20,9 @@ class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
 
   static List<Widget> screenNames = <Widget>[
-    CategoriesScreen(),
-    CartScreen(),
     SearchScreen(),
+    CartScreen(),
+    FavoriteScreen(),
     PersonalScreen(),
   ];
 
@@ -44,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
       childDecoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
-      drawer: const DrawerScreen(),
+      drawer: Container(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -88,12 +87,12 @@ class _MainScreenState extends State<MainScreen> {
               padding: const EdgeInsets.all(16),
               tabs: const [
                 GButton(
-                  icon: Icons.home,
+                  icon: Icons.home_outlined,
                   text: 'Home',
                 ),
                 GButton(icon: Icons.shopping_cart_outlined, text: 'Cart'),
                 GButton(
-                  icon: Icons.search,
+                  icon: Icons.favorite_border_rounded,
                   text: 'Search',
                 ),
                 GButton(

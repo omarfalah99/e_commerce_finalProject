@@ -8,19 +8,6 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Color.fromRGBO(246, 121, 82, 1),
-          ),
-        ),
-      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('fav')

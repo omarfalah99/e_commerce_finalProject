@@ -1,3 +1,4 @@
+import 'package:e_commerce/screen/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,10 @@ class InfoCard extends StatelessWidget {
         onPressed: () {
           if (value == 'Sign Out') {
             FirebaseAuth.instance.signOut();
+            Navigator.of(context)
+                .pushReplacement(MaterialPageRoute(builder: (context) {
+              return const LoginPage();
+            }));
           }
         },
         child: Row(
