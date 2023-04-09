@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'description_screen.dart';
 
@@ -14,6 +15,8 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   String name = "";
   String category = "";
+  bool isCat = false;
+  bool isDog = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +51,66 @@ class _SearchScreenState extends State<SearchScreen> {
             Expanded(
                 flex: 1,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     TextButton(
                       onPressed: () {
                         setState(() {
                           category = "Cat";
                         });
+                        if (isCat) {
+                          setState(() {
+                            category = "";
+                          });
+                        }
+                        setState(() {
+                          isCat = !isCat;
+                        });
+                        if (isDog) {
+                          setState(() {
+                            isDog = false;
+                          });
+                        }
                       },
                       child: Container(
+                        color: isCat
+                            ? Color.fromRGBO(246, 121, 82, 1)
+                            : Colors.transparent,
                         padding: EdgeInsets.all(5),
-                        child: Icon(Icons.pets),
+                        child: Icon(
+                          FontAwesomeIcons.cat,
+                          color: isCat ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          category = "Dog";
+                        });
+                        if (isDog) {
+                          setState(() {
+                            category = "";
+                          });
+                        }
+                        setState(() {
+                          isDog = !isDog;
+                        });
+                        if (isCat) {
+                          setState(() {
+                            isCat = false;
+                          });
+                        }
+                      },
+                      child: Container(
+                        color: isDog
+                            ? const Color.fromRGBO(246, 121, 82, 1)
+                            : Colors.transparent,
+                        padding: const EdgeInsets.all(5),
+                        child: Icon(
+                          FontAwesomeIcons.dog,
+                          color: isDog ? Colors.white : Colors.black,
+                        ),
                       ),
                     ),
                   ],

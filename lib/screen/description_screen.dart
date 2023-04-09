@@ -111,45 +111,6 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 const SizedBox(
                   height: 50,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          if (quantity > 1) {
-                            setState(() {
-                              quantity--;
-                            });
-                          }
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Color.fromRGBO(246, 121, 82, 1),
-                        )),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      '$quantity',
-                      style: const TextStyle(
-                        color: Color.fromRGBO(246, 121, 82, 1),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            quantity++;
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Color.fromRGBO(246, 121, 82, 1),
-                        )),
-                  ],
-                ),
                 Center(
                   child: Text(
                     '${widget.price * quantity} \$',
