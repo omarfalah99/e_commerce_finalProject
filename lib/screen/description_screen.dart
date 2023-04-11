@@ -7,7 +7,7 @@ class DescriptionScreen extends StatefulWidget {
   String des;
   String name;
   String image;
-  int price;
+  String price;
 
   DescriptionScreen(
       {Key? key,
@@ -111,11 +111,45 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 const SizedBox(
                   height: 50,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          if (quantity > 1) {
+                            setState(() {
+                              quantity--;
+                            });
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.remove,
+                        )),
+                    Text(
+                      quantity.toString(),
+                      style: const TextStyle(
+                        color: Color.fromRGBO(246, 121, 82, 1),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          quantity++;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.add,
+                      ),
+                    )
+                  ],
+                ),
                 Center(
                   child: Text(
-                    '${widget.price * quantity} \$',
-                    style:
-                        const TextStyle(color: Color.fromRGBO(246, 121, 82, 1)),
+                    (int.parse(widget.price) * quantity).toString() + ' \$',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color.fromRGBO(246, 121, 82, 1),
+                    ),
                   ),
                 ),
                 Padding(
@@ -131,13 +165,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                     onPressed: () async {
                       await FirebaseFirestore.instance
                           .collection('user_cart')
-                          .doc(FirebaseAuth.instance.currentUser!.email)
-                          .collection('carts')
                           .add({
                         'name': widget.name,
                         'imageUrl': widget.image,
                         'quantity': quantity,
                         'price': widget.price,
+                        'subtotal': int.parse(widget.price) * quantity,
+                        'email':
+                            FirebaseAuth.instance.currentUser?.email.toString(),
                       });
                       showDialog(
                           context: context,

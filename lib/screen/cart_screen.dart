@@ -10,104 +10,133 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  final stream = FirebaseFirestore.instance
-      .collection('user_cart')
-      .doc(FirebaseAuth.instance.currentUser!.email)
-      .collection('carts')
-      .snapshots();
-
   bool isItems = false;
+
+  int ari = 0;
+
+  void data() async {
+    final wow =
+        await FirebaseFirestore.instance.collection('user_cart').count().get();
+    print(wow.count);
+    setState(() {
+      ari = wow.count;
+    });
+  }
+
+  @override
+  void initState() {
+    data();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
-        stream: stream,
+        stream: FirebaseFirestore.instance
+            .collection('user_cart')
+            .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
+            .snapshots(),
         builder: (context, snapshot) {
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    minimumSize: Size(double.infinity, 50),
-                  ),
-                  child: const Text('Go To Checkout'),
-                  onPressed: () async {
-                    // final cart = snapshot.data?.docs[index];
-                    final data = await FirebaseFirestore.instance
-                        .collection('user_cart')
-                        .doc(FirebaseAuth.instance.currentUser!.email)
-                        .collection('carts')
-                        .get();
-
-                    List name = [];
-                    List image = [];
-                    List price = [];
-                    List quantity = [];
-
-                    data.docs.forEach((element) {
-                      name.add(element['name']);
-                      image.add(element['imageUrl']);
-                      price.add(element['price']);
-                      quantity.add(element['quantity']);
-                    });
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return CheckoutScreen(
-                        name: name,
-                        image: image,
-                        price: price,
-                      );
-                    }));
-                    // final data = await FirebaseFirestore.instance
-                    //     .collection('user_cart')
-                    //     .doc(FirebaseAuth.instance.currentUser!.email)
-                    //     .collection('carts')
-                    //     .get();
-                    //
-                    // String userName = '';
-                    // String phone = '';
-                    //
-                    // final data2 = await FirebaseFirestore.instance
-                    //     .collection('users')
-                    //     .doc(FirebaseAuth.instance.currentUser?.uid)
-                    //     .get()
-                    //     .then((value) {
-                    //   userName = value['name'];
-                    //   phone = value['phone'];
-                    // });
-                    //
-                    // data.docs.forEach(
-                    //   (element) {
-                    //     FirebaseFirestore.instance
-                    //         .collection('admin_cart')
-                    //         .add({
-                    //       'name': element['name'],
-                    //       'imageUrl': element['imageUrl'],
-                    //       'email': FirebaseAuth.instance.currentUser!.email,
-                    //       'price': element['price'],
-                    //       'quantity': element['quantity'],
-                    //       'subtotal':
-                    //           '${element['price'] * element['quantity']}',
-                    //       'nameOfUser': userName,
-                    //       'phone': phone
-                    //     });
-                    //     FirebaseFirestore.instance
-                    //         .collection('user_cart')
-                    //         .doc(FirebaseAuth.instance.currentUser!.email)
-                    //         .collection('carts')
-                    //         .doc(element.id)
-                    //         .delete();
-                    //   },
-                    // );
-                  },
-                ),
+              Expanded(
+                flex: 8,
+                child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      final data = snapshot.data?.docs[index];
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else {
+                        return Dismissible(
+                          key: UniqueKey(),
+                          onDismissed: (val) {
+                            FirebaseFirestore.instance
+                                .collection('user_cart')
+                                .doc(snapshot.data?.docs[index].id)
+                                .delete();
+                          },
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Color.fromRGBO(246, 121, 82, 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              minimumSize: Size(double.infinity, 50),
+                            ),
+                            onPressed: () {},
+                            child: ListTile(
+                              title: Text(
+                                data!['name'],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              leading: Image.network(data['imageUrl']),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    itemCount: snapshot.data?.docs.length),
               ),
+              ari == 0
+                  ? const Center(
+                      child: Text('There are no items in the cart'),
+                    )
+                  : Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromRGBO(246, 121, 82, 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            minimumSize: const Size(double.infinity, 50),
+                          ),
+                          child: const Text('Go To Checkout'),
+                          onPressed: () async {
+                            final data = await FirebaseFirestore.instance
+                                .collection('user_cart')
+                                .where('email',
+                                    isEqualTo: FirebaseAuth
+                                        .instance.currentUser?.email
+                                        .toString())
+                                .get();
+                            List price = [];
+                            List<String> name = [];
+                            List quantity = [];
+                            List<String> image = [];
+                            List subtotal = [];
+
+                            data.docs.forEach((element) {
+                              price.add(element['price']);
+                              name.add(element['name']);
+                              quantity.add(element['quantity']);
+                              image.add(element['imageUrl']);
+                              subtotal.add(element['subtotal']);
+                            });
+
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return CheckoutScreen(
+                                name: name,
+                                image: image,
+                                price: price,
+                                quantity: quantity,
+                                subtotal: subtotal,
+                              );
+                            }));
+                          },
+                        ),
+                      ),
+                    ),
             ],
           );
         },

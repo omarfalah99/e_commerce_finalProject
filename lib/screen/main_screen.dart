@@ -93,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
                 GButton(icon: Icons.shopping_cart_outlined, text: 'Cart'),
                 GButton(
                   icon: Icons.favorite_border_rounded,
-                  text: 'Search',
+                  text: 'Favorite',
                 ),
                 GButton(
                   icon: Icons.person_outline,

@@ -5,15 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  List name;
+  List<String> name;
   List price;
-  List image;
+  List<String> image;
+  List quantity;
+  List subtotal;
 
   CheckoutScreen({
     Key? key,
+    required this.quantity,
     required this.name,
     required this.image,
     required this.price,
+    required this.subtotal,
   }) : super(key: key);
 
   @override
@@ -35,8 +39,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       phone = sharedPreferences.getString('phone')!;
     });
   }
-
-  int newQuantity = 1;
 
   @override
   void initState() {
@@ -60,7 +62,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final screenHeight =
         MediaQuery.of(context).size.height - appbar.preferredSize.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
+    int newPrice = 1;
+    List list = [];
     return Scaffold(
       appBar: appbar,
       body: SafeArea(
@@ -124,58 +127,36 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
             Expanded(
-                flex: 8,
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('admin_cart')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF5F6F9),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          margin: const EdgeInsets.all(10),
-                          height: 70,
-                          child: ListTile(
-                            title: Text(widget.name[index]),
-                            leading: Image.network(widget.image[index]),
-                            trailing: Container(
-                              width: 109,
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        if (newQuantity > 0) {
-                                          setState(() {
-                                            newQuantity--;
-                                          });
-                                        }
-                                      },
-                                      icon: const Icon(
-                                        Icons.remove,
-                                      )),
-                                  Text(newQuantity.toString()),
-                                  IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          newQuantity++;
-                                        });
-                                      },
-                                      icon: const Icon(
-                                        Icons.add,
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      itemCount: widget.name.length,
-                    );
-                  },
+              flex: 8,
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF5F6F9),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    height: 70,
+                    child: ListTile(
+                      title: Text(widget.name[index]),
+                      leading: Image.network(widget.image[index]),
+                      subtitle: Text(widget.price[index] + ' \$'),
+                      trailing: Text(widget.quantity[index].toString()),
+                    ),
+                  );
+                },
+                itemCount: widget.name.length,
+              ),
+            ),
+            Expanded(
+                flex: 1,
+                child: ListTile(
+                  onTap: () {},
+                  title: const Text('Total Price'),
+                  trailing: widget.subtotal.isEmpty
+                      ? Text('No products added to cart')
+                      : Text(
+                          '${widget.subtotal.reduce((value, element) => value + element)} \$'),
                 )),
             Expanded(
               flex: 1,
@@ -184,7 +165,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(screenWidth * 0.8, screenHeight * 0.05),
-                    backgroundColor: Color.fromRGBO(246, 121, 82, 1),
+                    backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -192,8 +173,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   onPressed: () async {
                     final data = await FirebaseFirestore.instance
                         .collection('user_cart')
-                        .doc(FirebaseAuth.instance.currentUser!.email)
-                        .collection('carts')
+                        .where('email',
+                            isEqualTo: FirebaseAuth.instance.currentUser?.email
+                                .toString())
                         .get();
 
                     String userName = '';
@@ -217,19 +199,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           'imageUrl': element['imageUrl'],
                           'email': FirebaseAuth.instance.currentUser!.email,
                           'price': element['price'],
-                          'quantity': newQuantity,
-                          'subtotal': '${element['price'] * newQuantity}',
+                          'quantity': element['quantity'],
+                          'subtotal': '${element['price'] * 1}',
                           'nameOfUser': userName,
-                          'phone': phone
+                          'phone': phone,
+                          'date': DateTime.now().toString(),
+                          'city': city,
+                          'garak': garak,
                         });
-                        FirebaseFirestore.instance
-                            .collection('user_cart')
-                            .doc(FirebaseAuth.instance.currentUser!.email)
-                            .collection('carts')
-                            .doc(element.id)
-                            .delete();
                       },
                     );
+                    final wow = await FirebaseFirestore.instance
+                        .collection('user_cart')
+                        .where('email',
+                            isEqualTo: FirebaseAuth.instance.currentUser?.email
+                                .toString())
+                        .get();
+                    wow.docs.forEach((element) => {element.reference.delete()});
                   },
                   child: const Text('Checkout'),
                 ),
