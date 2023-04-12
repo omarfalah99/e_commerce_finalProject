@@ -40,6 +40,129 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
 
   int quantity = 1;
 
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: double.infinity,
+                  child: Image.network(
+                    widget.image,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Text(
+                      widget.name,
+                      style: const TextStyle(
+                        color: Color.fromRGBO(246, 121, 82, 1),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text(
+                        '${widget.price} \$',
+                        style: const TextStyle(
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    IconButton(
+                        onPressed: () {
+                          if (quantity > 1) {
+                            setState(() {
+                              quantity--;
+                            });
+                            print(quantity);
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.remove,
+                          color: Color.fromRGBO(246, 121, 82, 1),
+                        )),
+                    Text(
+                      quantity.toString(),
+                      style: const TextStyle(
+                        color: Color.fromRGBO(246, 121, 82, 1),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          quantity++;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.add,
+                        color: Color.fromRGBO(246, 121, 82, 1),
+                      ),
+                    )
+                  ],
+                ),
+                Center(
+                  child: Text(
+                    'Total price ${int.parse(widget.price) * quantity} \$',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color.fromRGBO(246, 121, 82, 1),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        minimumSize: const Size(double.infinity, 50)),
+                    onPressed: () async {
+                      await FirebaseFirestore.instance
+                          .collection('user_cart')
+                          .add({
+                        'name': widget.name,
+                        'imageUrl': widget.image,
+                        'quantity': quantity,
+                        'price': widget.price,
+                        'subtotal': int.parse(widget.price) * quantity,
+                        'email':
+                            FirebaseAuth.instance.currentUser?.email.toString(),
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Add to cart'),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,47 +234,6 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 const SizedBox(
                   height: 50,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          if (quantity > 1) {
-                            setState(() {
-                              quantity--;
-                            });
-                          }
-                        },
-                        icon: const Icon(
-                          Icons.remove,
-                        )),
-                    Text(
-                      quantity.toString(),
-                      style: const TextStyle(
-                        color: Color.fromRGBO(246, 121, 82, 1),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          quantity++;
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                      ),
-                    )
-                  ],
-                ),
-                Center(
-                  child: Text(
-                    (int.parse(widget.price) * quantity).toString() + ' \$',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Color.fromRGBO(246, 121, 82, 1),
-                    ),
-                  ),
-                ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
@@ -163,24 +245,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         ),
                         minimumSize: const Size(double.infinity, 50)),
                     onPressed: () async {
-                      await FirebaseFirestore.instance
-                          .collection('user_cart')
-                          .add({
-                        'name': widget.name,
-                        'imageUrl': widget.image,
-                        'quantity': quantity,
-                        'price': widget.price,
-                        'subtotal': int.parse(widget.price) * quantity,
-                        'email':
-                            FirebaseAuth.instance.currentUser?.email.toString(),
-                      });
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Item added to cart'),
-                            );
-                          });
+                      _showBottomSheet(context);
                     },
                     child: const Text('Add to cart'),
                   ),

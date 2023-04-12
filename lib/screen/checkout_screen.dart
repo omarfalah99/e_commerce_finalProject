@@ -62,8 +62,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final screenHeight =
         MediaQuery.of(context).size.height - appbar.preferredSize.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    int newPrice = 1;
-    List list = [];
+    List quantity = List.filled(20, 1, growable: true);
+
     return Scaffold(
       appBar: appbar,
       body: SafeArea(

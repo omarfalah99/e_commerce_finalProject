@@ -18,21 +18,23 @@ class FavoriteScreen extends StatelessWidget {
           return ListView.builder(
             itemBuilder: (context, index) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(
                     color: Color.fromRGBO(246, 121, 82, 1),
                   ),
                 );
               } else {
                 return Dismissible(
+                  direction: DismissDirection.endToStart,
                   background: Container(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                     color: Colors.red,
-                    child: Align(
+                    child: const Align(
+                        alignment: Alignment.centerRight,
                         child: Text(
                           'Delete',
                           style: TextStyle(color: Colors.white),
-                        ),
-                        alignment: Alignment.centerRight),
+                        )),
                   ),
                   onDismissed: (value) {
                     FirebaseFirestore.instance
