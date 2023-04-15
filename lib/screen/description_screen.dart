@@ -42,6 +42,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
 
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(

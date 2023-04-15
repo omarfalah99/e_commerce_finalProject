@@ -129,7 +129,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 builder: (context, snapshots) {
                   return (snapshots.connectionState == ConnectionState.waiting)
                       ? const Center(
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(
+                            color: Color.fromRGBO(246, 121, 82, 1),
+                          ),
                         )
                       : (!name.isEmpty)
                           ? ListView.builder(

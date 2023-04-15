@@ -62,7 +62,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final screenHeight =
         MediaQuery.of(context).size.height - appbar.preferredSize.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    List quantity = List.filled(20, 1, growable: true);
+
+    List list = [];
 
     return Scaffold(
       appBar: appbar,
@@ -190,17 +191,31 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       phone = value['phone'];
                     });
 
+                    data.docs.forEach((element) {
+                      list.add({
+                        'name': element['name'],
+                        'price': element['price'],
+                        'quantity': element['quantity'],
+                        'subtotal':
+                            element['quantity'] * int.parse(element['price']),
+                      });
+                    });
+
                     data.docs.forEach(
                       (element) {
                         FirebaseFirestore.instance
                             .collection('admin_cart')
-                            .add({
-                          'name': element['name'],
+                            .doc(FirebaseAuth.instance.currentUser?.email
+                                .toString())
+                            .set({
+                          // 'name': element['name'],
                           'imageUrl': element['imageUrl'],
                           'email': FirebaseAuth.instance.currentUser!.email,
-                          'price': element['price'],
-                          'quantity': element['quantity'],
-                          'subtotal': '${element['price'] * 1}',
+                          // 'price': element['price'],
+                          // 'quantity': element['quantity'],
+                          // 'subtotal':
+                          //     element['quantity'] * int.parse(element['price']),
+                          'items': FieldValue.arrayUnion(list),
                           'nameOfUser': userName,
                           'phone': phone,
                           'date': DateTime.now().toString(),
