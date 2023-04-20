@@ -1,8 +1,13 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/screen/address_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/theme_provider.dart';
 
 class CheckoutScreen extends StatefulWidget {
   List<String> name;
@@ -64,6 +69,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     List list = [];
+    final themeNotifier = Provider.of<ModelTheme>(context, listen: false);
 
     return Scaffold(
       appBar: appbar,
@@ -84,7 +90,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ? Padding(
                     padding: const EdgeInsets.all(15),
                     child: Card(
-                      color: const Color(0xFFF5F6F9),
+                      color: themeNotifier.isDark
+                          ? Colors.black
+                          : const Color(0xFFF5F6F9),
                       child: ListTile(
                         title: Text(city),
                         subtitle: Text(phone),
@@ -198,6 +206,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         'quantity': element['quantity'],
                         'subtotal':
                             element['quantity'] * int.parse(element['price']),
+                        'imageUrl': element['imageUrl'],
                       });
                     });
 
@@ -208,19 +217,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             .doc(FirebaseAuth.instance.currentUser?.email
                                 .toString())
                             .set({
-                          // 'name': element['name'],
-                          'imageUrl': element['imageUrl'],
                           'email': FirebaseAuth.instance.currentUser!.email,
-                          // 'price': element['price'],
-                          // 'quantity': element['quantity'],
-                          // 'subtotal':
-                          //     element['quantity'] * int.parse(element['price']),
                           'items': FieldValue.arrayUnion(list),
                           'nameOfUser': userName,
                           'phone': phone,
                           'date': DateTime.now().toString(),
                           'city': city,
                           'garak': garak,
+                          'orderNo': Random().nextInt(10000),
+                          'street': street,
                         });
                       },
                     );

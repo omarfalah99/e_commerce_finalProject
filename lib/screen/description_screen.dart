@@ -1,3 +1,4 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,15 @@ class DescriptionScreen extends StatefulWidget {
   String des;
   String name;
   String image;
+  String kg;
   String price;
+  String barcode;
 
   DescriptionScreen(
       {Key? key,
       required this.image,
+      required this.kg,
+      required this.barcode,
       required this.tag,
       required this.des,
       required this.name,
@@ -52,9 +57,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.2,
                   width: double.infinity,
-                  child: Image.network(
-                    widget.image,
-                    fit: BoxFit.cover,
+                  child: Container(
+                    height: 100,
+                    width: double.infinity,
+                    margin: EdgeInsets.all(20),
+                    child: BarcodeWidget(
+                      barcode: Barcode.code39(),
+                      data: widget.barcode,
+                    ),
                   ),
                 ),
                 Align(
@@ -170,6 +180,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(246, 121, 82, 1),
         elevation: 0,
+        title: Text(widget.name),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -228,10 +239,26 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                     )
                   ],
                 ),
-                Text(
-                  widget.des,
-                  style: const TextStyle(fontSize: 15),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    widget.des,
+                    style: const TextStyle(
+                      fontSize: 15,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
+                Center(
+                    child: Text(
+                  widget.kg + ' kg',
+                  style: TextStyle(
+                    color: Color.fromRGBO(246, 121, 82, 1),
+                  ),
+                )),
                 const SizedBox(
                   height: 50,
                 ),

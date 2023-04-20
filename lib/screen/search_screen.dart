@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
+import '../model/theme_provider.dart';
 import 'description_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -20,6 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ModelTheme>(context, listen: false);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -74,9 +77,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       },
                       child: Container(
                         color: isCat
-                            ? Color.fromRGBO(246, 121, 82, 1)
+                            ? const Color.fromRGBO(246, 121, 82, 1)
                             : Colors.transparent,
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         child: Icon(
                           FontAwesomeIcons.cat,
                           color: isCat ? Colors.white : Colors.black,
@@ -155,11 +158,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(builder: (context) {
                                         return DescriptionScreen(
-                                            image: data['imageUrl'],
-                                            tag: 'tag',
-                                            des: data['des'],
-                                            name: data['name'],
-                                            price: data['price']);
+                                          kg: data['kg'],
+                                          image: data['imageUrl'],
+                                          tag: 'tag',
+                                          des: data['des'],
+                                          name: data['name'],
+                                          price: data['price'],
+                                          barcode: data['barcode'],
+                                        );
                                       }));
                                     },
                                     child: ListTile(
@@ -198,19 +204,22 @@ class _SearchScreenState extends State<SearchScreen> {
                                           borderRadius:
                                               BorderRadius.circular(15),
                                         ),
-                                        backgroundColor:
-                                            const Color(0xFFF5F6F9),
+                                        backgroundColor: themeNotifier.isDark
+                                            ? Colors.black12
+                                            : Color(0xFFF5F6F9),
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (c) {
                                               return DescriptionScreen(
+                                                kg: products['kg'],
                                                 image: products['imageUrl'],
                                                 tag: index.toString(),
                                                 des: products['des'],
                                                 name: products['name'],
                                                 price: products['price'],
+                                                barcode: products['barcode'],
                                               );
                                             },
                                           ),
