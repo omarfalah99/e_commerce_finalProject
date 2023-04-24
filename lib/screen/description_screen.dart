@@ -58,9 +58,10 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                   height: MediaQuery.of(context).size.height * 0.2,
                   width: double.infinity,
                   child: Container(
+                    color: Colors.white,
                     height: 100,
                     width: double.infinity,
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     child: BarcodeWidget(
                       barcode: Barcode.code39(),
                       data: widget.barcode,
@@ -82,7 +83,6 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                   ),
                 ),
                 Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(20),
@@ -94,7 +94,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         ),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     IconButton(
                         onPressed: () {
                           if (quantity > 1) {
@@ -129,7 +129,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 ),
                 Center(
                   child: Text(
-                    'Total price ${int.parse(widget.price) * quantity} \$',
+                    'Total price ${double.parse(widget.price) * quantity} \$',
                     style: const TextStyle(
                       fontSize: 15,
                       color: Color.fromRGBO(246, 121, 82, 1),
@@ -157,7 +157,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         'imageUrl': widget.image,
                         'quantity': quantity,
                         'price': widget.price,
-                        'subtotal': int.parse(widget.price) * quantity,
+                        'subtotal': double.parse(widget.price) * quantity,
                         'email':
                             FirebaseAuth.instance.currentUser?.email.toString(),
                       });
@@ -178,7 +178,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(246, 121, 82, 1),
+        backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
         elevation: 0,
         title: Text(widget.name),
         leading: IconButton(
@@ -192,95 +192,96 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
         ),
       ),
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('fav')
-              .doc(FirebaseAuth.instance.currentUser!.email)
-              .collection('items')
-              .where('name', isEqualTo: widget.name)
-              .snapshots(),
-          builder: (context, snapshot) {
-            return ListView(
-              children: [
-                Stack(
-                  children: [
-                    Hero(
-                      tag: 'wow${widget.tag}',
-                      child: Image.network(
-                        widget.image,
-                        height: 300,
-                        width: double.infinity,
+        stream: FirebaseFirestore.instance
+            .collection('fav')
+            .doc(FirebaseAuth.instance.currentUser!.email)
+            .collection('items')
+            .where('name', isEqualTo: widget.name)
+            .snapshots(),
+        builder: (context, snapshot) {
+          return ListView(
+            children: [
+              Stack(
+                children: [
+                  Hero(
+                    tag: 'wow${widget.tag}',
+                    child: Image.network(
+                      widget.image,
+                      height: 300,
+                      width: double.infinity,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () => snapshot.data?.docs.length == 0
+                            ? addToFavourite()
+                            : showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const AlertDialog(
+                                    title: Text('Already added to fav'),
+                                  );
+                                }),
+                        icon: snapshot.data?.docs.length == 0
+                            ? const Icon(
+                                Icons.favorite_outline,
+                                color: Color.fromRGBO(246, 121, 82, 1),
+                              )
+                            : const Icon(
+                                Icons.favorite,
+                                color: Color.fromRGBO(246, 121, 82, 1),
+                              ),
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                          onPressed: () => snapshot.data?.docs.length == 0
-                              ? addToFavourite()
-                              : showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const AlertDialog(
-                                      title: Text('Already added to fav'),
-                                    );
-                                  }),
-                          icon: snapshot.data?.docs.length == 0
-                              ? const Icon(
-                                  Icons.favorite_outline,
-                                  color: Color.fromRGBO(246, 121, 82, 1),
-                                )
-                              : const Icon(
-                                  Icons.favorite,
-                                  color: Color.fromRGBO(246, 121, 82, 1),
-                                ),
-                        ),
-                      ),
-                    )
-                  ],
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  widget.des,
+                  style: const TextStyle(
+                    fontSize: 15,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Center(
                   child: Text(
-                    widget.des,
-                    style: const TextStyle(
-                      fontSize: 15,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                '${widget.kg} kg',
+                style: TextStyle(
+                  color: Color.fromRGBO(246, 121, 82, 1),
                 ),
-                SizedBox(
-                  height: 10,
+              )),
+              const SizedBox(
+                height: 50,
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      minimumSize: const Size(double.infinity, 50)),
+                  onPressed: () async {
+                    _showBottomSheet(context);
+                  },
+                  child: const Text('Add to cart'),
                 ),
-                Center(
-                    child: Text(
-                  widget.kg + ' kg',
-                  style: TextStyle(
-                    color: Color.fromRGBO(246, 121, 82, 1),
-                  ),
-                )),
-                const SizedBox(
-                  height: 50,
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        minimumSize: const Size(double.infinity, 50)),
-                    onPressed: () async {
-                      _showBottomSheet(context);
-                    },
-                    child: const Text('Add to cart'),
-                  ),
-                ),
-              ],
-            );
-          }),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

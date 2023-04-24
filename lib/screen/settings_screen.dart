@@ -1,3 +1,4 @@
+import 'package:e_commerce/screen/account_information_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ModelTheme>(context, listen: false);
     return Scaffold(
-      appBar: AppBar(),
       body: ListView(
         children: [
           const Padding(
@@ -75,9 +75,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(
             height: 15,
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(8.0),
             child: ListTile(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (builder) {
+                  return const AccountInformationScreen();
+                }));
+              },
               title: Text('Account Information'),
               leading: Icon(Icons.person),
             ),

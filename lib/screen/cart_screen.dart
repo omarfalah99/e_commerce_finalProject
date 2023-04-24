@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../model/theme_provider.dart';
 import 'checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
@@ -31,6 +33,8 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ModelTheme>(context, listen: false);
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -41,8 +45,12 @@ class _CartScreenState extends State<CartScreen> {
           return Column(
             children: [
               ari == 0
-                  ? const Center(
-                      child: Text('There are no items in the cart'),
+                  ? Center(
+                      child: Text(
+                        'There are no items in the cart',
+                        style: TextStyle(
+                            color: !theme.isDark ? Colors.black : Colors.white),
+                      ),
                     )
                   : Expanded(
                       flex: 8,
@@ -58,8 +66,9 @@ class _CartScreenState extends State<CartScreen> {
                                 direction: DismissDirection.endToStart,
                                 background: Container(
                                     color: Colors.red,
-                                    padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                    child: Align(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                    child: const Align(
                                       alignment: Alignment.centerRight,
                                       child: Text(
                                         'Delete',
@@ -75,7 +84,8 @@ class _CartScreenState extends State<CartScreen> {
                                 },
                                 child: TextButton(
                                   style: TextButton.styleFrom(
-                                    primary: Color.fromRGBO(246, 121, 82, 1),
+                                    primary:
+                                        const Color.fromRGBO(246, 121, 82, 1),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15),
                                     ),
@@ -87,8 +97,10 @@ class _CartScreenState extends State<CartScreen> {
                                       data!['name'],
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          color: Colors.black54,
+                                      style: TextStyle(
+                                          color: !theme.isDark
+                                              ? Colors.black
+                                              : Colors.white,
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -100,6 +112,11 @@ class _CartScreenState extends State<CartScreen> {
                           },
                           itemCount: snapshot.data?.docs.length),
                     ),
+              ari == 0
+                  ? SizedBox(
+                      height: height * 0.63,
+                    )
+                  : Container(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                 child: ElevatedButton(

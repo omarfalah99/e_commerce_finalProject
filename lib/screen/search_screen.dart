@@ -186,7 +186,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               },
                             )
                           : GridView.builder(
-                              itemCount: snapshots.data!.docs.length,
+                              itemCount: snapshots.data?.docs.length,
                               itemBuilder: (context, index) {
                                 var data = snapshots.data!.docs[index].data()
                                     as Map<String, dynamic>;
