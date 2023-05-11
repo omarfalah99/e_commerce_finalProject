@@ -155,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           .createUserWithEmailAndPassword(
                               email: emailController.text,
                               password: passwordController.text);
-                      FirebaseFirestore.instance
+                      await FirebaseFirestore.instance
                           .collection('users')
                           .doc(result.user?.uid)
                           .set({

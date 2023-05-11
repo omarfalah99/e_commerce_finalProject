@@ -2,7 +2,7 @@
     package="com.example.e_commerce">
 
     <application
-        android:label="e_commerce"
+        android:label="Areous Veterinary Clinic"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

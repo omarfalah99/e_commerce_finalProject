@@ -1,8 +1,7 @@
 import 'package:e_commerce/screen/favorite_screen.dart';
+import 'package:e_commerce/screen/personal_information_screen.dart';
 import 'package:e_commerce/screen/search_screen.dart';
-import 'package:e_commerce/screen/settings_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'cart_screen.dart';
@@ -23,10 +22,8 @@ class _MainScreenState extends State<MainScreen> {
     SearchScreen(),
     CartScreen(),
     FavoriteScreen(),
-    SettingsScreen(),
+    PersonalInformation(),
   ];
-
-  final _advancedDrawerController = AdvancedDrawerController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,23 +31,6 @@ class _MainScreenState extends State<MainScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
-        // leading: IconButton(
-        //   onPressed: () {
-        //     _advancedDrawerController.showDrawer();
-        //   },
-        //   icon: ValueListenableBuilder<AdvancedDrawerValue>(
-        //     valueListenable: _advancedDrawerController,
-        //     builder: (_, value, __) {
-        //       return AnimatedSwitcher(
-        //         duration: const Duration(milliseconds: 250),
-        //         child: Icon(
-        //           value.visible ? Icons.clear : Icons.menu,
-        //           key: ValueKey<bool>(value.visible),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ),
       ),
       key: globalKey,
       body: screenNames.elementAt(selectedIndex),
@@ -82,8 +62,8 @@ class _MainScreenState extends State<MainScreen> {
                 text: 'Favorite',
               ),
               GButton(
-                icon: Icons.settings,
-                text: 'Settings',
+                icon: Icons.person,
+                text: 'Profile',
               ),
             ],
           ),

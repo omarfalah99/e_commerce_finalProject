@@ -119,7 +119,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize:
-                              Size(screenWidth * 0.8, screenHeight * 0.1),
+                              Size(screenWidth * 0.8, screenHeight * 0.07),
                           padding: const EdgeInsets.all(20),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -128,10 +128,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               const Color.fromRGBO(246, 121, 82, 1),
                         ),
                         onPressed: () async {
-                          Navigator.of(context)
+                          String refresh = await Navigator.of(context)
                               .push(MaterialPageRoute(builder: (builder) {
                             return AddressScreen();
                           }));
+                          if (refresh == 'omar') {
+                            getData();
+                          }
                         },
                         child: const Text('Add Address'),
                       ),
@@ -176,7 +179,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: city.isEmpty
-                    ? const Text('Please add address')
+                    ? const Text(
+                        'Please add address to complete your order',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      )
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize:
@@ -248,8 +257,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               .get();
                           wow.docs.forEach(
                               (element) => {element.reference.delete()});
+                          data.docs.forEach((element) {
+                            FirebaseFirestore.instance
+                                .collection('myOrders')
+                                .add({
+                              'email': FirebaseAuth.instance.currentUser?.email
+                                  .toString(),
+                              'date': DateTime.now().toString(),
+                              'name': element['name'],
+                              'price': element['price'],
+                              'quantity': element['quantity'],
+                              'subtotal': element['quantity'] *
+                                  double.parse(element['price']),
+                              'imageUrl': element['imageUrl'],
+                            });
+                          });
                         },
-                        child: const Text('Checkout'),
+                        child: const Text('Order'),
                       ),
               ),
             )
