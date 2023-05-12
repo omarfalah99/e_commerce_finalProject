@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/screen/account_information_screen.dart';
 import 'package:e_commerce/screen/addresses.dart';
 import 'package:e_commerce/widgets/personal_items.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('users')
+                        .where('email',
+                            isEqualTo: FirebaseAuth.instance.currentUser?.email)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../model/theme_provider.dart';
@@ -77,12 +77,14 @@ class _SearchScreenState extends State<SearchScreen> {
                       },
                       child: Container(
                         color: isCat
-                            ? const Color.fromRGBO(246, 121, 82, 1)
+                            ? const Color.fromRGBO(246, 121, 82, 0.1)
                             : Colors.transparent,
                         padding: const EdgeInsets.all(5),
-                        child: Icon(
-                          FontAwesomeIcons.cat,
-                          color: isCat ? Colors.white : Colors.black,
+                        child: SvgPicture.asset(
+                          'assets/cat.svg',
+                          fit: BoxFit.cover,
+                          width: 20,
+                          height: 30,
                         ),
                       ),
                     ),
@@ -107,12 +109,14 @@ class _SearchScreenState extends State<SearchScreen> {
                       },
                       child: Container(
                         color: isDog
-                            ? const Color.fromRGBO(246, 121, 82, 1)
+                            ? const Color.fromRGBO(246, 121, 82, 0.1)
                             : Colors.transparent,
                         padding: const EdgeInsets.all(5),
-                        child: Icon(
-                          FontAwesomeIcons.dog,
-                          color: isDog ? Colors.white : Colors.black,
+                        child: SvgPicture.asset(
+                          'assets/dog.svg',
+                          fit: BoxFit.cover,
+                          width: 20,
+                          height: 30,
                         ),
                       ),
                     ),
