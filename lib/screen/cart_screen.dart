@@ -15,26 +15,6 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   bool isItems = false;
 
-  int ari = 0;
-
-  void data() async {
-    final wow = await FirebaseFirestore.instance
-        .collection('user_cart')
-        .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
-        .count()
-        .get();
-    print(wow.count);
-    setState(() {
-      ari = wow.count;
-    });
-  }
-
-  @override
-  void initState() {
-    // data();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ModelTheme>(context, listen: false);
@@ -52,10 +32,13 @@ class _CartScreenState extends State<CartScreen> {
           if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
             return Column(
               children: [
-                SvgPicture.asset(
-                  'assets/empty_cart.svg',
-                  height: height * 0.5,
-                  width: double.infinity,
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: SvgPicture.asset(
+                    'assets/empty_cart.svg',
+                    height: height * 0.5,
+                    width: double.infinity,
+                  ),
                 ),
                 const Text(
                   'Your cart is empty.\nPlease add a few items',
@@ -121,11 +104,6 @@ class _CartScreenState extends State<CartScreen> {
                     },
                     itemCount: snapshot.data?.docs.length),
               ),
-              // ari == 0
-              //     ? SizedBox(
-              //         height: height * 0.63,
-              //       )
-              //     : Container(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                 child: ElevatedButton(

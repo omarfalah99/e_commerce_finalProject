@@ -162,12 +162,12 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
                                             const EdgeInsets.all(20),
                                         titlePadding: EdgeInsets.all(20),
                                         children: [
-                                          TextField(
+                                          TextFormField(
                                             decoration: const InputDecoration(
                                                 hintText: 'Old Password'),
                                             controller: oldPassword,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           ),
                                           TextField(
@@ -199,34 +199,84 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
                                                       password:
                                                           oldPassword.text);
 
-                                              await FirebaseAuth
-                                                  .instance.currentUser
-                                                  ?.reauthenticateWithCredential(
-                                                      cred)
-                                                  .then((value) {
-                                                FirebaseAuth
-                                                    .instance.currentUser
-                                                    ?.updatePassword(
-                                                        updatedPassword.text);
-                                              }).catchError((e) {
-                                                print(e);
-                                              });
+                                              // await FirebaseAuth
+                                              //     .instance.currentUser
+                                              //     ?.reauthenticateWithCredential(
+                                              //         cred)
+                                              //     .then((value) {
+                                              //   FirebaseAuth
+                                              //       .instance.currentUser
+                                              //       ?.updatePassword(
+                                              //           updatedPassword.text);
+                                              // }).catchError((e) {
+                                              //   print(e);
+                                              // });
 
-                                              await FirebaseFirestore.instance
-                                                  .collection('users')
-                                                  .doc(FirebaseAuth.instance
-                                                      .currentUser?.uid)
-                                                  .set({
-                                                'email': FirebaseAuth.instance
-                                                    .currentUser?.email,
-                                                'id': FirebaseAuth
-                                                    .instance.currentUser?.uid,
-                                                'name': name,
-                                                'password':
-                                                    updatedPassword.text,
-                                                'phone': phone,
-                                              });
-                                              Navigator.of(context).pop();
+                                              try {
+                                                await FirebaseAuth
+                                                    .instance.currentUser
+                                                    ?.reauthenticateWithCredential(
+                                                        cred);
+                                                await FirebaseFirestore.instance
+                                                    .collection('users')
+                                                    .doc(FirebaseAuth.instance
+                                                        .currentUser?.uid)
+                                                    .set({
+                                                  'email': FirebaseAuth.instance
+                                                      .currentUser?.email,
+                                                  'id': FirebaseAuth.instance
+                                                      .currentUser?.uid,
+                                                  'name': name,
+                                                  'password':
+                                                      updatedPassword.text,
+                                                  'phone': phone,
+                                                });
+                                                Navigator.of(context).pop();
+                                              } on FirebaseAuthException catch (e) {
+                                                if (e.code ==
+                                                    'wrong-password') {
+                                                  print(
+                                                      'The old password provided is incorrect.');
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                      title: Text(
+                                                          'Incorrect Password'),
+                                                      content: Text(
+                                                          'The old password you provided is incorrect.'),
+                                                      actions: <Widget>[
+                                                        ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                Color.fromRGBO(
+                                                                    246,
+                                                                    121,
+                                                                    82,
+                                                                    1),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                          ),
+                                                          child: Text('OK'),
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                } else {
+                                                  print(
+                                                      'Something went wrong: ${e.message}');
+                                                }
+                                              }
                                             },
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor:

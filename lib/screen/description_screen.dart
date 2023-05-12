@@ -30,15 +30,9 @@ class DescriptionScreen extends StatefulWidget {
 class _DescriptionScreenState extends State<DescriptionScreen> {
   Future addToFavourite() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
-    var currentUser = _auth.currentUser;
-    CollectionReference _collectionRef =
-        FirebaseFirestore.instance.collection("fav");
-    return _collectionRef
-        .doc(currentUser!.email)
-        .collection("items")
-        .doc()
-        .set({
+    return FirebaseFirestore.instance.collection("fav").add({
       "name": widget.name,
+      'email': FirebaseAuth.instance.currentUser?.email.toString(),
       "imageUrl": widget.image,
     }).then((value) => print("Added to favourite"));
   }
@@ -194,8 +188,6 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('fav')
-            .doc(FirebaseAuth.instance.currentUser!.email)
-            .collection('items')
             .where('name', isEqualTo: widget.name)
             .snapshots(),
         builder: (context, snapshot) {

@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressScreen extends StatefulWidget {
   AddressScreen({Key? key}) : super(key: key);
@@ -21,13 +22,8 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     AppBar appbar = AppBar(
-      leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back,
-          )),
+      title: Text('Add Address'),
+      // leading: Container(),
     );
     final screenHeight =
         MediaQuery.of(context).size.height - appbar.preferredSize.height;
@@ -48,16 +44,16 @@ class _AddressScreenState extends State<AddressScreen> {
                   }
                 },
                 controller: city,
-                decoration: InputDecoration(hintText: 'City'),
+                decoration: const InputDecoration(hintText: 'City'),
               ),
             ),
             Container(
               width: double.infinity,
-              margin: EdgeInsets.all(15),
+              margin: const EdgeInsets.all(15),
               child: DropdownButton<String>(
-                dropdownColor: Color.fromRGBO(246, 121, 82, 1),
+                dropdownColor: const Color.fromRGBO(246, 121, 82, 1),
                 borderRadius: BorderRadius.circular(15),
-                icon: Icon(
+                icon: const Icon(
                   Icons.keyboard_arrow_down,
                 ),
                 value: dropdownValue,
@@ -87,7 +83,7 @@ class _AddressScreenState extends State<AddressScreen> {
                   }
                 },
                 controller: garak,
-                decoration: InputDecoration(hintText: 'Garak'),
+                decoration: const InputDecoration(hintText: 'Garak'),
               ),
             ),
             Padding(
@@ -99,7 +95,7 @@ class _AddressScreenState extends State<AddressScreen> {
                   }
                 },
                 controller: street,
-                decoration: InputDecoration(hintText: 'Street name'),
+                decoration: const InputDecoration(hintText: 'Street name'),
               ),
             ),
             Padding(
@@ -112,12 +108,12 @@ class _AddressScreenState extends State<AddressScreen> {
                 },
                 controller: phone,
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(hintText: 'Phone'),
+                decoration: const InputDecoration(hintText: 'Phone'),
               ),
             ),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(246, 121, 82, 1),
+                  backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
                   minimumSize: Size(screenWidth * 0.9, screenHeight * 0.08),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
@@ -125,14 +121,19 @@ class _AddressScreenState extends State<AddressScreen> {
                 ),
                 onPressed: () async {
                   if (formstate.currentState!.validate()) {
-                    SharedPreferences address =
-                        await SharedPreferences.getInstance();
-                    address.setString('city', city.text);
-                    address.setString('garak', garak.text);
-                    address.setString('street', street.text);
-                    address.setString('phone', phone.text);
-                    Navigator.of(context).pop('omar');
+                    await FirebaseFirestore.instance
+                        .collection('address')
+                        .doc(FirebaseAuth.instance.currentUser?.email)
+                        .set({
+                      'email':
+                          FirebaseAuth.instance.currentUser?.email.toString(),
+                      'city': city.text,
+                      'street': street.text,
+                      'phone': phone.text,
+                      'garak': garak.text,
+                    });
                   }
+                  Navigator.of(context).pop();
                 },
                 child: const Text('Save Address'))
           ],

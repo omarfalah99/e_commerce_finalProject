@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/screen/address_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/theme_provider.dart';
 
@@ -15,58 +16,66 @@ class Addresses extends StatefulWidget {
 class _AddressesState extends State<Addresses> {
   @override
   Widget build(BuildContext context) {
-    String city = '';
-    String garak = '';
-    String street = '';
-    String phone = '';
-
-    Future<void> getData() async {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      setState(() {
-        city = sharedPreferences.getString('city')!;
-        garak = sharedPreferences.getString('garak')!;
-        street = sharedPreferences.getString('street')!;
-        phone = sharedPreferences.getString('phone')!;
-      });
-    }
-
     final themeNotifier = Provider.of<ModelTheme>(context, listen: false);
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Address'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(15),
-        child: FutureBuilder(
-            future: SharedPreferences.getInstance(),
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('address')
+                .where('email',
+                    isEqualTo: FirebaseAuth.instance.currentUser?.email)
+                .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              } else {
-                return Card(
-                  color: themeNotifier.isDark
-                      ? Colors.black
-                      : const Color(0xFFF5F6F9),
-                  child: ListTile(
-                    title: Text(snapshot.data!.getString('city').toString()),
-                    subtitle:
-                        Text(snapshot.data!.getString('phone').toString()),
-                    trailing: IconButton(
-                      onPressed: () async {
-                        String refresh = await Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (builder) {
-                          return AddressScreen();
-                        }));
-                        if (refresh == 'omar') {
-                          getData();
-                        }
-                      },
-                      icon: const Icon(Icons.edit),
+              }
+              if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, screenHeight * 0.07),
+                      padding: const EdgeInsets.all(20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
                     ),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (builder) {
+                        return AddressScreen();
+                      }));
+                    },
+                    child: const Text('Add Address'),
                   ),
                 );
               }
+              return Card(
+                color: themeNotifier.isDark
+                    ? Colors.black
+                    : const Color(0xFFF5F6F9),
+                child: ListTile(
+                  title: Text(snapshot.data!.docs[0]['city']),
+                  subtitle: Text(snapshot.data!.docs[0]['phone']),
+                  trailing: IconButton(
+                    onPressed: () async {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (builder) {
+                        return AddressScreen();
+                      }));
+                    },
+                    icon: const Icon(Icons.edit),
+                  ),
+                ),
+              );
             }),
       ),
     );
