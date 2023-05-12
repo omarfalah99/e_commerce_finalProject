@@ -19,17 +19,69 @@ class _LoginPaeState extends State<LoginPage> {
   void login() async {
     final formstate = form.currentState;
     if (formstate!.validate()) {
-      print('valid');
+      try {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (builder) {
+          return MainScreen();
+        }));
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('User not found'),
+              actions: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(246, 121, 82, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('OK'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          );
+        } else if (e.code == 'wrong-password') {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Password is incorrect'),
+              actions: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(246, 121, 82, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text('OK'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print('Something went wrong: ${e.message}');
+        }
+      }
     }
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return MainScreen();
-      }));
-    } on FirebaseAuthException catch (e) {}
+    // if (formstate!.validate()) {
+    //   print('valid');
+    // }
+    // try {
+    //   await FirebaseAuth.instance.signInWithEmailAndPassword(
+    //     email: email,
+    //     password: password,
+    //   );
+    //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+    //     return MainScreen();
+    //   }));
+    // } on FirebaseAuthException catch (e) {}
   }
 
   @override

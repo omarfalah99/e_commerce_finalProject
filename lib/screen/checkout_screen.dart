@@ -83,7 +83,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   isEqualTo: FirebaseAuth.instance.currentUser?.email)
               .snapshots(),
           builder: (context, snapshot) {
-            final address = snapshot.data?.docs[0];
+            // final address = snapshot.data?.docs[0];
             return Column(
               children: [
                 const Align(
@@ -105,8 +105,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ? Colors.black
                               : const Color(0xFFF5F6F9),
                           child: ListTile(
-                            title: Text(address!['city']),
-                            subtitle: Text(address['phone']),
+                            title: Text(snapshot.data?.docs[0]!['city']),
+                            subtitle: Text(snapshot.data?.docs[0]['phone']),
                           ),
                         ),
                       )
@@ -175,7 +175,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: (snapshot.data == null ||
                             snapshot.data!.docs.isEmpty)
                         ? const Text(
-                            'Please add address to complete your order',
+                            'Please first add address to complete your order',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 15,
@@ -238,10 +238,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     'nameOfUser': userName,
                                     'phone': phone,
                                     'date': DateTime.now().toString(),
-                                    'city': address!['city'],
-                                    'garak': address['garak'],
+                                    'city': snapshot.data?.docs[0]['city'],
+                                    'garak': snapshot.data?.docs[0]['garak'],
                                     'orderNo': Random().nextInt(10000),
-                                    'street': address['street'],
+                                    'street': snapshot.data?.docs[0]['street'],
                                   });
                                 },
                               );

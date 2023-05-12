@@ -55,7 +55,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
                                 ),
-                                subtitle: Text(snapshot.data?.docs[0]['phone']),
+                                subtitle: Text(
+                                    '+964 ' + snapshot.data?.docs[0]['phone']),
                                 trailing: IconButton(
                                     icon: const Icon(Icons.edit),
                                     onPressed: () {
@@ -65,7 +66,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                       }));
                                     }),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                               ),
                               TextButton.icon(
@@ -80,7 +81,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 16),
                                 ),
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.location_on,
                                   color: Colors.black,
                                 ),
