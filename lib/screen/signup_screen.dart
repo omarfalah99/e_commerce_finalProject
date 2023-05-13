@@ -165,6 +165,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         'phone': phone.text,
                         'id': result.user?.uid,
                       });
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Account Created'),
+                            content: Text('Your account has been created successfully.'),
+                            actions: [
+                              TextButton(
+                                child: Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) {
                           return LoginPage();

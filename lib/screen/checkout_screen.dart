@@ -245,6 +245,52 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   });
                                 },
                               );
+
+                              data.docs.forEach((element) async {
+                                String quantity = '';
+                                String name = '';
+                                String imageUrl = '';
+                                String barcode = '';
+                                String kg = '';
+                                String price = '';
+                                String id = '';
+                                String des = '';
+                                String category = '';
+
+                                await FirebaseFirestore.instance
+                                    .collection('products')
+                                    .doc(element['id'])
+                                    .get()
+                                    .then((value) {
+                                  quantity = value['quantity'];
+                                  name = value['name'];
+                                  imageUrl = value['imageUrl'];
+                                  barcode = value['barcode'];
+                                  kg = value['kg'];
+                                  price = value['price'];
+                                  id = value['id'];
+                                  des = value['des'];
+                                  category = value['category'];
+                                });
+
+                                await FirebaseFirestore.instance
+                                    .collection('products')
+                                    .doc(element['id'])
+                                    .set({
+                                  'name': name,
+                                  'des': des,
+                                  'imageUrl': imageUrl,
+                                  'price': price,
+                                  'quantity': (int.parse(quantity) -
+                                          element['quantity'])
+                                      .toString(),
+                                  'barcode': barcode,
+                                  'kg': kg,
+                                  'category': category,
+                                  'id': id,
+                                });
+                              });
+
                               final wow = await FirebaseFirestore.instance
                                   .collection('user_cart')
                                   .where('email',

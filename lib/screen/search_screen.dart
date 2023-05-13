@@ -162,6 +162,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(builder: (context) {
                                         return DescriptionScreen(
+                                          id: data['id'],
                                           kg: data['kg'],
                                           image: data['imageUrl'],
                                           tag: 'tag',
@@ -217,6 +218,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           MaterialPageRoute(
                                             builder: (c) {
                                               return DescriptionScreen(
+                                                id: products['id'],
                                                 kg: products['kg'],
                                                 image: products['imageUrl'],
                                                 tag: index.toString(),

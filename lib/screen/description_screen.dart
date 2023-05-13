@@ -10,11 +10,13 @@ class DescriptionScreen extends StatefulWidget {
   String image;
   String kg;
   String price;
+  String id;
   String barcode;
 
   DescriptionScreen(
       {Key? key,
       required this.image,
+      required this.id,
       required this.kg,
       required this.barcode,
       required this.tag,
@@ -151,6 +153,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         'imageUrl': widget.image,
                         'quantity': quantity,
                         'price': widget.price,
+                        'id': widget.id,
                         'subtotal': double.parse(widget.price) * quantity,
                         'email':
                             FirebaseAuth.instance.currentUser?.email.toString(),
