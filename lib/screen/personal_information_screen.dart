@@ -32,8 +32,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
             child: Container(
                 width: double.infinity,
                 height: height * 0.2,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF5F6F9),
+                decoration: BoxDecoration(
+                  color: themeNotifier.isDark ? Colors.black : Colors.white,
                 ),
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
@@ -54,14 +54,28 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               ListTile(
                                 title: Text(
                                   snapshot.data?.docs[0]['name'],
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                 ),
                                 subtitle: Text(
-                                    '+964 ' + snapshot.data?.docs[0]['phone']),
+                                    '+964 ' + snapshot.data?.docs[0]['phone'],
+                                    style: TextStyle(
+                                      color: themeNotifier.isDark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    )),
                                 trailing: IconButton(
-                                    icon: const Icon(Icons.edit),
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: themeNotifier.isDark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(builder: (context) {
@@ -79,14 +93,19 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                     return Addresses();
                                   }));
                                 },
-                                label: const Text(
+                                label: Text(
                                   'Addresses',
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 16),
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                 ),
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.location_on,
-                                  color: Colors.black,
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.black,
                                 ),
                               )
                             ],

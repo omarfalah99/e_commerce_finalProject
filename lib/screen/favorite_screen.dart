@@ -56,47 +56,38 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 child: ListView.builder(
                     itemBuilder: (context, index) {
                       final data = snapshot.data?.docs[index];
-                      return Dismissible(
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                            color: Colors.red,
-                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: const Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'Delete',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )),
-                        key: UniqueKey(),
-                        onDismissed: (val) {
-                          FirebaseFirestore.instance
-                              .collection('fav')
-                              .doc(snapshot.data?.docs[index].id)
-                              .delete();
-                        },
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            primary: const Color.fromRGBO(246, 121, 82, 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            minimumSize: Size(double.infinity, 50),
+                      return TextButton(
+                        style: TextButton.styleFrom(
+                          primary: const Color.fromRGBO(246, 121, 82, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          onPressed: () {},
-                          child: ListTile(
-                            title: Text(
-                              data!['name'],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color:
-                                    !theme.isDark ? Colors.black : Colors.white,
-                                fontSize: 16,
-                              ),
+                          minimumSize: Size(double.infinity, 50),
+                        ),
+                        onPressed: () {},
+                        child: ListTile(
+                          title: Text(
+                            data!['name'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color:
+                                  !theme.isDark ? Colors.black : Colors.white,
+                              fontSize: 16,
                             ),
-                            leading: Image.network(data['imageUrl']),
                           ),
+                          leading: Image.network(data['imageUrl']),
+                          trailing: IconButton(
+                              onPressed: () {
+                                FirebaseFirestore.instance
+                                    .collection('fav')
+                                    .doc(snapshot.data?.docs[index].id)
+                                    .delete();
+                              },
+                              icon: Icon(
+                                Icons.favorite,
+                                color: Color.fromRGBO(246, 121, 82, 1),
+                              )),
                         ),
                       );
                     },

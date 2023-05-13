@@ -211,7 +211,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         ),
                                         backgroundColor: themeNotifier.isDark
                                             ? Colors.black12
-                                            : Color(0xFFF5F6F9),
+                                            : const Color(0xFFF5F6F9),
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).push(
@@ -254,7 +254,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 childAspectRatio: 3,
-                                mainAxisExtent: 275,
+                                mainAxisExtent: 295,
                               ),
                             );
                 },

@@ -63,7 +63,9 @@ class PersonalItems extends StatelessWidget {
             Expanded(
                 child: Text(
               name,
-              style: TextStyle(color: Colors.black, fontSize: 15),
+              style: TextStyle(
+                  color: themeNotifier.isDark ? Colors.white : Colors.black,
+                  fontSize: 15),
             )),
           ],
         ),

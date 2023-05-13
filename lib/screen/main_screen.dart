@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/screen/favorite_screen.dart';
 import 'package:e_commerce/screen/personal_information_screen.dart';
 import 'package:e_commerce/screen/search_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -33,20 +31,39 @@ class _MainScreenState extends State<MainScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(246, 121, 82, 1),
-        title: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .where('email',
-                  isEqualTo: FirebaseAuth.instance.currentUser?.email)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container();
-            } else {
-              return Text(snapshot.data?.docs[0]['name']);
-            }
-          },
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 130,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    selectedIndex = 0;
+                  });
+                },
+                child: Image.asset(
+                  'assets/about_us_photo.jpg',
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+              'Areous',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ],
         ),
+        // centerTitle: true,
       ),
       key: globalKey,
       body: screenNames.elementAt(selectedIndex),

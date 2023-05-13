@@ -144,10 +144,10 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
                           children: [
                             const Icon(Icons.password),
                             const SizedBox(width: 20),
-                            Expanded(
+                            const Expanded(
                                 child: Text(
-                              data!['password'],
-                              style: const TextStyle(color: Colors.black),
+                              'Password',
+                              style: TextStyle(color: Colors.black),
                             )),
                             InkWell(
                               onTap: () {
@@ -160,7 +160,7 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
                                                 BorderRadius.circular(15)),
                                         contentPadding:
                                             const EdgeInsets.all(20),
-                                        titlePadding: EdgeInsets.all(20),
+                                        titlePadding: const EdgeInsets.all(20),
                                         children: [
                                           TextFormField(
                                             decoration: const InputDecoration(
@@ -198,19 +198,6 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
                                                           .toString(),
                                                       password:
                                                           oldPassword.text);
-
-                                              // await FirebaseAuth
-                                              //     .instance.currentUser
-                                              //     ?.reauthenticateWithCredential(
-                                              //         cred)
-                                              //     .then((value) {
-                                              //   FirebaseAuth
-                                              //       .instance.currentUser
-                                              //       ?.updatePassword(
-                                              //           updatedPassword.text);
-                                              // }).catchError((e) {
-                                              //   print(e);
-                                              // });
 
                                               try {
                                                 await FirebaseAuth
@@ -324,10 +311,6 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
                               data!['email'],
                               style: const TextStyle(color: Colors.black),
                             )),
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black,
-                            ),
                           ],
                         ),
                       ),
